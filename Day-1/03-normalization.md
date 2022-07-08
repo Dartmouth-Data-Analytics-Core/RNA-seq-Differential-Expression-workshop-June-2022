@@ -2,8 +2,8 @@
 
 ### Learning objectives:
 - Understand why read counts must be normalized in RNA-seq data
-- Learn the principles behind the major normalization strategies in RNA-seq and when to apply them
-- Learn how to perform standard normalization strategies
+- Review the principles of basic RNA-seq normalization strategies
+- Understand the principles of DESeq2 Median-of ratios normalization and how to implement using the DESeq2 package
 
 ### Set-up
 
@@ -19,16 +19,12 @@ As we saw in the last lesson, the `counts()` function can be used to extract the
 cts <- counts(dds, normalized=FALSE)
 ```
 
-These counts will be needed for the normalization exercises below.
-
 You will also need to load some R-packages that will be used in this lesson:
 ```r
 library(ggplot2)
 library(tximport)
 library(DESeq2)
 library(biomaRt)
-library(vsn)
-library(pheatmap)
 ```
 
 ## Count normalization in RNA-seq
@@ -36,6 +32,8 @@ library(pheatmap)
 To compare expression levels between genes within a sample, or genes across multiple samples, it is critical the data is normalized to allow appropriate interpretation of the results. Which normalization strategy used depends on several factors such as library type, and type of comparison you wish to make (e.g. within- vs between-sample).
 
 Below we will discuss the major sources of variation that need to be accounted for during normalization in order to reach appropriate conclusions about your results. Subsequently, we will discuss the normalization approaches that account for these sources of variation and when to use them.
+
+>NOTE: If you attend the *RNA-seq Primary Data Analysis Workshop* this content will be familiar.
 
 ## Sources of variation in RNA-seq data requiring normalization
 
@@ -55,7 +53,7 @@ To address gene length bias, we must normalize raw read counts in a way that acc
 
 Normalization for gene length is critical when comparing between genes **within the same sample**, however when comparing expression of the same gene **across different samples**, correction for gene length is not as important since we assume the gene is of the same length in all samples.
 
-NOTE: An exception to this rule is when comparing expression levels of different transcripts between samples, which may change in length.
+>NOTE: An exception to this rule is when comparing expression levels of different transcripts between samples, which may change in length.
 
 ### Library size/sequencing depth  
 
@@ -81,10 +79,13 @@ The presence of truly differentially expressed genes between samples causes the 
 
 Such library composition effects must also be accounted for during normalization to avoid falsely interpreting compositional effects as true differential expression findings. If samples you wish to compare are **very** distinct in their gene expression profiles, such as comparing drug-treated samples vs untreated samples, compositional effects may be large, therefore effectively correcting for these effects becomes critical for appropriate interpretation.
 
+----
 
 ## Normalization methods
 
 Several normalization methods exist for RNA-seq data. Which method you use depends on the comparison you are trying to make (e.g. between or within samples), therefore it is important to understand how each is calculated and when to use it.
+
+> NOTE: An optional lesson is available in the *Day-1* directory that demonstrates how these standard normalization methods can be implemented using basic R code.
 
 ### Counts per million (CPM)
 
@@ -95,32 +96,7 @@ CPM is a simple normalization method that involves scaling the number of reads m
 	title="" width="65%" height="65%" />
 </p>
 
-Calculate CPM for our dataset:
-```r
-# look at the counts object
-head(cts)
-
-# write a function that will calculate CPM
-cpm <- function(counts) {
-	cpm <- c()
-	for(i in 1:length(counts)){
-		cpm[i] <- counts[i] / sum(counts) * 1e6
-	}
-	cpm
-}
-
-# apply function to the columns of raw counts data
-# we start at the third column because the first two columns have the ensemble IDs and gene names
-cts_cpm <- apply(cts[, 3:5], 2, cpm)
-## NOTE: we are calculating cpm for first 3 samples only to save time..
-# add gene info columns back in
-cts_cpm <- cbind(cts[, c(1,2)], cts_cpm)
-
-# write to file
-write.csv(cts_cpm, file="cts_CPM.csv")
-```
-
-**NOTE:** CPM does **NOT** normalize for gene length, therefore cannot be used to compare expression between different genes in the same sample. An exception to this rule would be in the case of 3'-end RNA-seq datasets, which have no gene length bias, therefore CPM would be appropriate for comparing expression between genes in the same sample in such data.
+>**KEY POINT:** CPM does NOT normalize for gene length, therefore cannot be used to compare expression between different genes in the same sample. An exception to this rule would be in the case of 3'-end RNA-seq datasets, which have no gene length bias, therefore CPM would be appropriate for comparing expression between genes in the same sample in such data.
 
 ### Transcripts per million (TPM)
 
@@ -131,73 +107,7 @@ TPM has become a common normalization approach for RNA-seq data. Reads mapped to
 	title="" width="50%" height="50%" />
 </p>
 
-Since TPM normalizes for both gene length and sequencing depth, TPM values can be used to compare expression levels of genes within a sample, as well as between samples. TPM is recommended instead of RPKM/FPKM, for reasons we will discuss below.
-
-Calculate TPM from our raw read counts:
-```r
-# read in gene lengths matrix (pre made for you)
-gene_lengths <- read.table("data/gene-lengths-grch38.tsv", sep="\t", stringsAsFactors=FALSE, header=TRUE)
-
-# look at the lengths object
-head(gene_lengths)
-
-# write a function that will calculate TPM
-tpm <- function(counts, lengths) {
-	rate <- counts / lengths
-	tpm <- c()
-	for(i in 1:length(counts)){
-		tpm[i] <- rate[i] / sum(rate) * 1e6
-	}
-	tpm
-}
-
-# apply function to the columns of raw counts data
-cts_tpm <- apply(cts[, 3:5], 2, tpm, gene_lengths$length)
-## NOTE: we are calculating tpm for first 3 samples only to save time..
-
-# add gene info columns back in
-cts_tpm <- cbind(cts[, c(1,2)], cts_tpm)
-
-# write to file
-write.csv(cts_tpm, file="cts_TPM.csv")
-```
-
-Now you have a separate expression file containing all the normalized count values, and can be used to compare gene expression between samples, as well as between genes within a sample.
-
-You could use this matrix to plot TPM values for some genes of interest. For example, the manuscript associated with these data ([Himes *et al*, 2014, *PloS One*](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0099625)) identifies *DUSP1* as a differentially expressed gene in their study. Lets plot DUSP1 TPM values to see if we can confirm this observation.
-
-NOTE: Since we only calculated TPM for a subset of samples above (to save time) the example below will first load the complete TPM normalized dataset.
-
-Visualize *DUSP1* TPM expression levels:
-```R
-# read in file containing all TPM counts (pre-made for you)
-cts_tpm_full <- read.csv("data/all_counts_TPM-full.csv")
-
-# get expression values for DUSP1 row
-DUSP1_tpm <- cts_tpm_full[cts_tpm_full$gene_name=="DUSP1",]
-
-# remove gene info columns
-DUSP1_tpm <- DUSP1_tpm[ ,c(4:ncol(DUSP1_tpm))]
-
-# convert to a numeric vector
-DUSP1 <- as.numeric(DUSP1_tpm[1,])
-
-# generate barplot of gene expression across samples
-ppi=300
-png("DUSP1_tpm.png")
-barplot(DUSP1,
-	col="lightblue", ylab="TPM", xlab="sample",
-	main = "DUSP1 expression", las = 1)
-dev.off()
-```
-
-<p align="center">
-<img src="../figures/DUSP1_tpm.png" alt="d1"
-	title="" width="40%" height="30%" />
-</p>
-
-DUSP1 expression is clearly variable across the samples, suggesting differential expression across sample groups may exist (treated vs untreated). This can be tested statistically in a formal differential expression analysis (more about this later).
-
+TPM normalizes for gene length AND sequencing depth, so TPM values can be used to compare expression levels of genes within a sample AND between samples.
 
 ### Reads/fragments per kilobase of exon per million mapped reads (RPKM/FPKM)
 
@@ -208,33 +118,9 @@ RPKM and FPKM have been used for many years as normalization strategies in RNA-s
 	title="" width="90%" height="85%" />
 </p>
 
-The difference between RPKM and FPKM is very simple: RPKM is used for single-end experiments, whereas FPKM is used in paired-end experiments. This is because in single-end experiments we only measure one end of the DNA fragments in our library, however in paired-end experiments we measure the same DNA molecule 2x (once from each end), therefore we only need to count that fragment once during normalization, despite having 2 reads for it.
-
-Since our dataset is paired-end and we counted the number of fragments in the quantification step, we are calculating FPKM. Calculate FPKM from our raw read counts:
-```r
-# write a function that will calculate FPKM
-fpkm <- function(counts, lengths) {
-	rate <- counts / lengths
-	fpkm <- c()
-	for(i in 1:length(counts)){
-		fpkm[i] <- rate[i] / sum(counts) * 1e9
-	}
-	fpkm
-}
-
-# apply function to the columns of raw counts data
-cts_fpkm <- apply(cts[, 3:5], 2, fpkm, gene_lengths$length)
-## NOTE: we are calculating fpkm for first 3 samples only to save time..
-
-# add gene info columns back in
-cts_fpkm <- cbind(cts[, c(1,2)], cts_fpkm)
-
-# write to file
-write.csv(cts_fpkm, file="cts_FPKM.csv")
-```
+The difference between RPKM and FPKM is very simple: RPKM is used for single-end experiments, whereas FPKM is used in paired-end experiments. In single-end experiments, we only measure one end of the DNA fragments in our library, however in paired-end experiments we measure the same DNA molecule 2x (once from each end), therefore we only need to count that fragment once during normalization, despite having 2 reads for it.
 
 Although the measures are calculated in a very similar way, the reversed order of the calculations has a profound effect on how the values calculated by each method can be interpreted. Consider the example below:
-
 
 #### Raw counts:
 **Gene** | **Sample 1** | **Sample 2**
@@ -264,7 +150,11 @@ Y (3kb) | 1.758 | 2.160
 Z (1kb) | 3.956 | 3.110  
 **Total** | **10** | **10**
 
-Total TPM values across samples are equal, therefore the TPM values for each gene can be interpreted on the same scale between samples, making TPM values less susceptible to bias. TPM has now been suggested as a general replacement to RPKM and FPKM.  
+Total TPM values across samples are equal, therefore the TPM values for each gene can be interpreted on the same scale between samples, making TPM values less susceptible to bias. **TPM has now been suggested as a general replacement to RPKM and FPKM.**
+
+----
+
+### Limitations of basic RNA-seq normalization approaches:
 
 Despite the benefits of interpretability achieved by TPM, limitations still exist, and TPM values (like RPKM/FPKM) are susceptible to misuse in some contexts, discussed further [in Zhao et al, 2020.](https://rnajournal.cshlp.org/content/early/2020/04/13/rna.074922.120). In particular, while TPM does normalize for library composition effects between samples, when composition effects become very large (such as when comparing between experimental groups in a differential expression experiment) TPM can suffer some biases.
 
@@ -273,7 +163,6 @@ To address these issues, more complex normalization algorithms have been develop
 - *EdgeR's* TMM method (Trimmed Mean of M-values)
 
 -----
-
 
 
 ### Normalization for DE analysis: DESeq2 Median-of ratios
@@ -334,7 +223,7 @@ head(counts(dds, normalized=FALSE))
 
 We can use this table of normalized read counts to compare values for individual genes across samples. We might want to use this to (sanity) check the expression of a few genes of interest, before we actually do any statistical modeling.
 
-Let's do this with the *DUSP1* gene that we used above.
+Let's do this with the *DUSP1* gene that was reported as significantly DE in the manuscript associated with these data:
 ```r
 # lets make a function to generate a quick plot of the normalized counts
 gene_plot <- function(ENSG, gene_symbol){
@@ -366,10 +255,17 @@ gene_plot(ENSG = "ENSG00000120129", gene_symbol = "DUSP1")
 
 DUSP1 expression is consistently higher in the DEX samples than the untreated, suggesting this gene is differentially expressed, validating prior knowledge and giving us confidence that our experiment worked and sample labels are all correct.
 
+It is worth noting at this point that DESeq2 normalized counts are not used directly for the testing of DE. Library composition is included as a parameter in the DESeq2 model, allowing measurement precision to be modeled correctly. Therefore, **raw counts** should always be used as input for DESeq2.
+
+
+
+
 In a later lesson, we will discuss how the size factors calculated for count normalization with DESeq2 are used in formal statistical tests of differential expression.
 
 --------
-**Important note:** DESeq2 normalized read counts are NOT normalized for gene length, so cannot be used to compare expression levels *between genes within the same sample*.
+### Important note:
+
+DESeq2 normalized read counts are NOT normalized for gene length, so cannot be used to compare expression levels *between genes within the same sample*.
 
 For such comparisons between genes, we need to use measures such as:  
 - *Transcripts per million (TPM)*  
@@ -380,7 +276,7 @@ For such comparisons between genes, we need to use measures such as:
 
 ## Summary
 
-The below table summarizes the normalization methods described above. It is important to learn when it is appropriate to apply each one to your dataset based on the comparisons you are trying to make.
+The below table summarizes the normalization methods described above. Make sure you select the appropriate method for your dataset.
 
 **Method** | **Name** | **Accounts for** | **Appropriate comparisons**
 -------|-------|-------|-------
@@ -389,5 +285,4 @@ TPM | Transcripts per million | Depth & feature length | - Between- and within-s
 RPKM/FPKM | Reads/fragments per kilobase<br>of exon per million | Depth & feature length | - Within-sample<br>
 DESeq2 | median-of-ratios | library size and composition | - Between-sample
 
-[This video](https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/) provides an excellent explanation of *RPKM*, *FPKM*, & *TPM*, and explains why it is better to use TPM if you need to correct for
-library size AND gene length.
+[This video](https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/) provides an excellent explanation of *RPKM*, *FPKM*, & *TPM*, and explains why it is better to use TPM if you need to correct for library size AND gene length.
