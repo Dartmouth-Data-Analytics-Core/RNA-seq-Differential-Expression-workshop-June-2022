@@ -63,7 +63,7 @@ Most R-packages are obtained from one of two package repositories:
 - [CRAN (The Comprehensive R Network)](https://cran.r-project.org/)
 - [Bioconductor](https://www.bioconductor.org/)
 
-During the workshop we will be using a number of packages from both CRAN and Bioconductor. Once you have installed R and RStudio, open RStudio (or R) and copy & paste the following code chunk into the console. This will prompt R to download and install the specified packages.
+During the workshop we will be using a number of packages from both CRAN and Bioconductor. Once you have installed R and RStudio, open RStudio (or R) and copy & paste the following code chunk into the console. This will prompt R to download and install the specified packages. We have demonstrated this for you in [this video](https://youtu.be/UtZHS-q7buI).
 
 ```r
 if (!any(rownames(installed.packages()) == "tximport")){
