@@ -1,4 +1,4 @@
-# 01 - Exploratory data analysis
+value# 01 - Exploratory data analysis
 
 ### Learning objectives:
 - Understand the principal of dimension reduction for exploratory data analysis
@@ -10,7 +10,7 @@
 Load the DESeq2 dataset:
 ```r
 # set working directory (YOU MAY NEED TO CHANGE THIS PATH)
-setwd('~/Documents/GitHub/RNA-seq-Differential-Expression-workshop-June-2021/')
+setwd('~/Documents/GitHub/RNA-seq-Differential-Expression-workshop-June-2022/')
 
 # read in the RDS object
 dds <- readRDS("DESeq2.rdata")
@@ -422,7 +422,7 @@ pca_df$sample_ids[pca_df$PC2 > 10 & pca_df$tx.group=="Dex"]
 colData_sub$batch <- "Batch 1"
 colData_sub$batch[colData_sub$SRR=="SRR1039516"] <- "Batch 2"
 colData_sub$batch[colData_sub$SRR=="SRR1039517"] <- "Batch 2"
-							     
+
 # add a second color palate to annotate batch
 cols2 <- brewer.pal(3, "Greens")
 
@@ -452,3 +452,44 @@ draw(ht2, row_title = "Genes", column_title = "Top 500 most variable genes")
 Based on our newly labeled plot it does seem that these 2 samples are
 outliers, supporting the presence of a potentially non-biological factor affecting gene expression in these data (such as a batch effect).
 
+-------
+
+#### Scaling the heatmap
+
+In the above examples, the color of each field in the heatmap is defined by the normalized expression value (higher expression in red, lower expression in blue). This allows us to compare more easily between genes and identify those with higher expression levels.
+
+However, presenting the data this way can make it hard to see differences in expression between the samples (heatmap columns). To make sample-specific differences in expression easier to identify, we can *standardize* the expression values for each gene using **Z-score scaling**.
+
+**Z-score scaling** transforms the expression levels for each gene onto the *standard normal distribution* (mean = 0, standard deviation = 1). Z-scores are calculated by subtracting the mean from each expression value and dividing by the mean, and tell us how many standard deviations an expression value is above the mean for that gene.  
+
+<p align="center">
+<img src="../figures/standard-normal.png" alt="glength"
+	title="" width="85%" height="85%" />
+</p>
+
+Scaling gives us expression values for each gene that are all on the same scale, allowing us to more easily visualize changes in the expression of each gene between samples.
+
+Use R to scale the expression matrix and re-plot the heatmap:
+```r
+# scale matrix by each row
+mat_scaled = t(apply(mat1, 1, scale))
+
+# set up colors for heatmap
+col = colorRamp2(c(-3, 0, 3), c("blue", "white", "red"))
+
+# generate heatmap object
+ht1 = Heatmap(mat_scaled, name = "Expression", col = col,
+              top_annotation = c(ha1),
+              bottom_annotation = c(ha),
+              show_row_names = FALSE,
+              show_column_names = FALSE)
+
+draw(ht1, row_title = "Genes", column_title = "Top 500 most variable genes")
+```
+
+<p align="center">
+<img src="../figures/heatmap-scaled.png" alt="glength"
+	title="" width="90%" height="90%" />
+</p>
+
+Note that through scaling, we loose information about the expression abundance of each gene relative to any other gene (we can tell which genes are highly expressed, and which are more lowly expressed). Therefore, it can sometimes be helpful to visualize your data both ways, scaled and unscaled.
