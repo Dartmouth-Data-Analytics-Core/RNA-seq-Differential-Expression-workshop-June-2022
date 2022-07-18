@@ -76,7 +76,7 @@ As with working on the terminal a good first step is to orient yourself, let's s
 getwd()
 
 # Set working directory to the data folder in the github repository you downloaded - notice that the path needs to be in double quotes
-setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2021-master/data")
+setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
 ```
 
 ## Basic data structures in R
@@ -280,7 +280,7 @@ x[x == "a"]
 
 Factors are a special instance of vectors where only predefined values, called *levels* can be included in the vector. Such vectors are useful when you know that elements of a vector should take on one of those predefined values.
 
-Categorical data is often stored in vectors, making them a very important object class when you start doing any statistical modeling in R. For example, you might store subject gender for all the subjects in your study as a factor, with the levels *male* and *female*.
+Categorical data is often stored in vectors, making them a very important object class when you start doing any statistical modeling in R. For example, you might store subject sex for all the subjects in your study as a factor, with the levels *male* and *female*.
 
 ```r
 # make a character vector with only male or female as entries
@@ -372,7 +372,7 @@ Since matrices have dimensions, `names()` cannot be used as we did for vectors. 
 
 ```r
 rownames(mat) <- c("gene_1", "gene_2", "gene_3")
-colnames(mat) <- c("subject_1", "subject_2", "subject_3")
+colnames(mat) <- c("subject_1", "subject_2", "subject_3", "subject_4")
 ```
 
 Matrices are a very important object class for mathematical and statistical applications in R, so it is certainly worth exploring more complex matrix operations if you will be doing any more complex statistical analysis in R.
@@ -386,7 +386,7 @@ Often you will construct a data frame by reading in a dataset from a file. While
 ```r
 df <- data.frame(subject_id = c("s1", "s2", "s3", "s4"),
                  age = c(45, 83, 38, 23),
-                 gender = c("female", "female", "male", "female"),
+                 sex = c("female", "female", "male", "female"),
                  status = c("case", "case", "control", "control"))
 
 str(df)
@@ -397,7 +397,7 @@ Note that the default behavior of `data.frame()` in R version < 4.0 is to conver
 ```r
 df <- data.frame(subject_id = c("s1", "s2", "s3", "s4"),
                  age = c(45, 83, 38, 23),
-                 gender = c("female", "female", "male", "female"),
+                 sex = c("female", "female", "male", "female"),
                  status = c("case", "case", "control", "control"),
                  stringsAsFactors=FALSE)
 
@@ -412,14 +412,14 @@ df[1,]
 # get first column
 df[,1]
 
-# get gender variable/column
-df[, c("gender")]
+# get sex variable/column
+df[, c("sex")]
 
-# # get gender and status
-df[, c("gender", "status")]
+# # get sex and status
+df[, c("sex", "status")]
 
-# get the gender variable with $
-df$gender
+# get the sex variable with $
+df$sex
 
 # add a column for smoking status
 df$smoking_status <- c("former", "none", "heavy", "none")
@@ -428,19 +428,19 @@ df$smoking_status <- c("former", "none", "heavy", "none")
 Relational (e.g. `==`) and logical operators (e.g. `!`) can be used to interrogate specific variables in a dataframe. The resulting logical can also be used to subset the data frame.
 ```r
 # obtain a logical indicating which subjects are female
-df$gender == "female"
+df$sex == "female"
 
 # use logical to subset the data frame for only female subjects (rows)
-df2 <- df[df$gender == "female", ]
+df2 <- df[df$sex == "female", ]
 
 # check dimensions of the new data frame
 dim(df2)
 
 # use the LOGICAL NOT operator ! to obtain only male subjects  
-df[!df$gender == "female", ]
+df[!df$sex == "female", ]
 
 # this could obviously also be achieved with..
-df[df$gender == "male", ]
+df[df$sex == "male", ]
 ```
 
 ### Beyond the basic object classes
