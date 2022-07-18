@@ -1,11 +1,11 @@
 
-## RNA-seq differential expression workshop, August 2022
+## RNA-seq differential expression workshop, July 2022
 
 This workshop will be delivered on July 18, 20, & 22 (12-5pm each day) by the Data Analytics Core (DAC) of the [Center for Quantitative Biology at Dartmouth](https://sites.dartmouth.edu/cqb/).
 
 The DAC aims to facilitate advanced bioinformatic, computational, and statistical analysis of complex genomics data for the Dartmouth research community.
 
-If you have questions about this workshop, or would like to discuss data analysis services available from the Data Analytics Core, please visit out [website](https://sites.dartmouth.edu/cqb/projects-and-cores/data-analytics-core/), or email us at: DataAnalyticsCore@groups.dartmouth.edu
+If you have questions about this workshop, or would like to discuss data analysis services available from the Data Analytics Core, please visit our [website](https://sites.dartmouth.edu/cqb/projects-and-cores/data-analytics-core/), or email us at: DataAnalyticsCore@groups.dartmouth.edu
 
 <img src="figures/logo.jpg" width="250" height="140" >
 
