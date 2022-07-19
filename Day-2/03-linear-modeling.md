@@ -216,7 +216,7 @@ Since a 'unit increase' in `subject_group` simply means controls vs diseased sub
 
 ------
 
-### Part 4 - Multiple regression
+### Part 5 - Multiple regression
 
 We could have simply addressed the above analysis using a more simple statistical test such as a *t-test*. However, we commonly want to include additional variables in our linear models, and approaches such as the t-test cannot handle this scenario.
 
@@ -233,7 +233,7 @@ This approach is referred to as **multiple regression**. If you will be doing an
 
 ---
 
-### Part 5 - Generalized linear models
+### Part 6 - Generalized linear models
 
 While standard linear models are very useful, there are situations where their use is not appropriate, for example:
 
