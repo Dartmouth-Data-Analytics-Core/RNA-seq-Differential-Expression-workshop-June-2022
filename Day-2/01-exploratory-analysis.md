@@ -28,11 +28,11 @@ library(circlize)
 
 ### Introduction
 
-Before running a differential expression analysis, it is good practice to explore the relationships between samples based on their gene global gene expression profiles. This analysis allows perform several quality control checks such as confirming that replicates cluster together, or the dataset is free from batch effects. Furthermore, these analysis allow us to build expectations for our DE analysis.
+Before running a differential expression analysis, it is good practice to explore the relationships between samples based on their gene global gene expression profiles. This analysis allows perform several quality control checks such as confirming that replicates cluster together, or the dataset is free from batch effects. Furthermore, these analyses allow us to build expectations for our DE analysis.
 
 
 
-To perform these analysis, we generally make use of **unsupervised statistical analysis methods**. These methods make no prior assumptions about relationships between samples, and aim to reveal clusters and groups that form naturally in our data.
+To perform these analyses, we generally make use of **unsupervised statistical analysis methods**. These methods make no prior assumptions about relationships between samples, and aim to reveal clusters and groups that form naturally in our data.
 
 Such methods are often referred to as **dimension reduction methods** since they generate a simplified representation of the original dataset. We will discuss two of these methods that can be used for RNA-seq data:
 - Principal components analysis (PCA)
@@ -84,10 +84,7 @@ rld <- rlog(dds, blind = FALSE)
 head(assay(rld))
 ```
 
-We can illustrate the benefit of using the rlog over standard log
-transformation (+ a pseudo-count for genes with 0 counts where the log
-of 0 is infinity) by comparing the transformed values for two samples
-against each other.
+We can illustrate the benefit of using the rlog over standard log transformation (+ a pseudo-count for genes with 0 counts where the log of 0 is infinity) by comparing the transformed values for two samples against each other.
 
 ```r
 # set plotting window to 1 row vs 2 columns
@@ -136,16 +133,16 @@ abline(v=250, col="blue")
 At around 500 the variance starts to increase more dramatically, so it would be reasonable to select these as the *'variable features'* for the PCA.
 
 ```r
-# modify variable feature number to be used in PCA and hierarchical clustering based on no. of most variable features
+# Set a variable for the number of genes (features) to be used for PCA and clustering.
 var_feature_n <- 500
 
 # calculate the row variance
 rv <- rowVars(assay(rld))
 
-# order variance by size and select top 500 with most variance
-select <- order(rv, decreasing = TRUE)[1:500]
+# order variance and select the rows (genes) with the most variance
+select <- order(rv, decreasing = TRUE)[1:var_feature_n]
 
-# subset rlog values for genes with top variance ranks
+# subset rlog values for genes by top variance ranks
 rld_sub <- assay(rld)[select, ]
 
 # transpose the matrix (rows to columns and columns to rows)
@@ -160,10 +157,10 @@ percentVar <- pca$sdev^2/sum(pca$sdev^2)
 # subset for first 5 elemets
 percentVar <- percentVar[1:5]
 
-# give the string names
+# add names to the percentVar vector
 names(percentVar) <- c("PC1", "PC2", "PC3", "PC4", "PC5")
 
-# plot variance for top 10 PCs
+# plot variance for top 5 PCs
 barplot(percentVar, col = "indianred", las = 1, ylab = "% Variance", cex.lab = 1.2)
 ```
 
@@ -277,11 +274,9 @@ A comprehensive introduction of how to correct for a batch effect is beyond the 
 
 Deciding on which approach to take is a complicated issue, and is largely dependent on the extent of the batch effect. If the batch effect is very large, it may be too difficult to effectively remove it statistically, or regress out variation attributable to it in the DE analysis.
 
-Ultimately, the easiest way to handle a batch effect if to prevent it from ever occurring. Whwere possible, practice your protocol and confirm you can get consistent replicates before committing to the full experiment.
+Ultimately, the easiest way to handle a batch effect if to prevent it from ever occurring. Where possible, practice your protocol and confirm you can get consistent replicates before committing to the full experiment.
 
-**Take home message on batch effects:** If your experiment includes
-multiple batches, check them in your unsupervised
-analyses to check for a batch effect.
+**Take home message on batch effects:** If your experiment includes multiple batches, check them in your unsupervised analyses to check for a batch effect.
 
 
 ----------
@@ -301,7 +296,7 @@ analyses to check for a batch effect.
 
 Hierarchical clustering is complimentary to approaches like PCA, and is used to assess relationships between samples and features (e.g. genes) in a dataset. Visualizing these relationships provides insight into which samples are most similar/dissimilar, as well as identify genes that changes in similar ways across a dataset.
 
-Both supervised and unsupervised clustering methods exist, however unsupervised methods are generally used when we have no prior expectation for groups (clusters) thats should exist in the data. To generate clusters, a **distance metric** is calculated, where smaller values represent more similar samples, which are grouped together into clusters. A **dendrogram** is used to represent the relationships between samples, as determined during the clustering process. The results are commonly visualized using a heatmap.
+Both supervised and unsupervised clustering methods exist, however unsupervised methods are generally used when we have no prior expectation for groups (clusters) that should exist in the data. To generate clusters, a **distance metric** is calculated, where smaller values represent more similar samples, which are grouped together into clusters. A **dendrogram** is used to represent the relationships between samples, as determined during the clustering process. The results are commonly visualized using a heatmap.
 
 <p align="center">
 <img src="../figures/heatmaps.png" alt="glength"
@@ -317,8 +312,7 @@ Several distance metrics exist (e.g. Euclidean distance, Manhattan distance) and
 
 #### Cluster the dataset using unsupervised clustering  
 
-Similarly to the PCA, we perform the clustering using the **rlog
-transformed data** and the **500 most variable features**, as features that do not vary across samples are not informative for dimension reduction approaches.
+Similarly to the PCA, we perform the clustering using the **rlog transformed data** and the **500 most variable features**, as features that do not vary across samples are not informative for dimension reduction approaches.
 
 ```r
 # select top X no. of variable genes
@@ -361,9 +355,7 @@ draw(ht1, row_title = "Genes", column_title = "Top 500 most variable genes")
 	title="" width="90%" height="90%" />
 </p>
 
-As we saw in the PCA, the Alb and co-treated samples do not form any
-clear clusters. We may want to remove them and perform the clustering
-again so that we can compare the untreated and Dex samples more easily.
+As we saw in the PCA, the Alb and co-treated samples do not form any clear clusters. We may want to remove them and perform the clustering again so that we can compare the untreated and Dex samples more easily.
 
 ```r
 # select sample groups to keep
@@ -404,20 +396,14 @@ draw(ht1, row_title = "Genes", column_title = "Top 500 most variable genes")
 ```
 
 <p align="center">
-<img src="../figures/unsup-clust-heatmap-2.png" alt="glength"
+<img src="../figures/unsup-clust-heatmap-2-v2.png" alt="glength"
 	title="" width="90%" height="90%" />
 </p>
 
 
-There does appear to be reasonable clustering between
-untreated and Dex samples, suggesting there are unique gene expression programs defining the Dex samples from the untreated. However, one of these samples in the Dex group seems to be clustered further away from the other Dex samples. This could be the Dex treated sample that clustered away from the other Dex treated samples on the PCA. We can add an annotation bar for the fake batch effect we created earlier to this plot to confirm this.
+There does appear to be reasonable clustering between untreated and Dex samples, suggesting there are unique gene expression programs defining the Dex samples from the untreated. However, one of these samples in the Dex group seems to be clustered further away from the other Dex samples. This could be the Dex treated sample that clustered away from the other Dex treated samples on the PCA. We can add an annotation bar for the fake batch effect we created earlier to this plot to confirm this.
 
 ```r
-# which samples had values > 10 for PC2
-pca_df$sample_ids[pca_df$PC2 > 10 & pca_df$tx.group=="untreated"]
-# or <10 for PC2
-pca_df$sample_ids[pca_df$PC2 > 10 & pca_df$tx.group=="Dex"]
-
 # set the batch variable for these samples as batch 2
 colData_sub$batch <- "Batch 1"
 colData_sub$batch[colData_sub$SRR=="SRR1039516"] <- "Batch 2"
@@ -492,4 +478,4 @@ draw(ht1, row_title = "Genes", column_title = "Top 500 most variable genes")
 	title="" width="90%" height="90%" />
 </p>
 
-Note that through scaling, we lose information about the expression abundance of each gene relative to any other gene (we can tell which genes are highly expressed, and which are more lowly expressed). Therefore, it can sometimes be helpful to visualize your data both ways, scaled and unscaled.
+Note that through scaling, we lose information about the expression abundance of each gene relative to any other gene (we can’t tell which genes are highly expressed, and which are lowly expressed.) Therefore, it can sometimes be helpful to visualize your data both ways, scaled and unscaled.
