@@ -1,4 +1,4 @@
-value# 01 - Exploratory data analysis
+# 01 - Exploratory data analysis
 
 ### Learning objectives:
 - Understand the principal of dimension reduction for exploratory data analysis
@@ -10,10 +10,10 @@ value# 01 - Exploratory data analysis
 Load the DESeq2 dataset:
 ```r
 # set working directory (YOU MAY NEED TO CHANGE THIS PATH)
-setwd('~/Documents/GitHub/RNA-seq-Differential-Expression-workshop-June-2022/')
+setwd('~/Documents/GitHub/RNA-seq-Differential-Expression-workshop-June-2022-master/')
 
 # read in the RDS object
-dds <- readRDS("DESeq2.rdata")
+dds <- readRDS("DESeq2.rds")
 ```
 
 Load required R-packages:
@@ -492,4 +492,4 @@ draw(ht1, row_title = "Genes", column_title = "Top 500 most variable genes")
 	title="" width="90%" height="90%" />
 </p>
 
-Note that through scaling, we loose information about the expression abundance of each gene relative to any other gene (we can tell which genes are highly expressed, and which are more lowly expressed). Therefore, it can sometimes be helpful to visualize your data both ways, scaled and unscaled.
+Note that through scaling, we lose information about the expression abundance of each gene relative to any other gene (we can tell which genes are highly expressed, and which are more lowly expressed). Therefore, it can sometimes be helpful to visualize your data both ways, scaled and unscaled.
