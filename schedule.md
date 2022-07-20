@@ -21,19 +21,19 @@ We have designed the schedule so that breaks are essentially built into the brea
 # Day 2
 
 - **12:00-12:30 - Help session**
-- **12:30-12:40 - Day 1 recap & questions**
-- **12:40-1:30 - Exploratory data analysis**
-- **1:30-3:00 - Basic statistical inference** 
-- **3:15-4:45 - Linear models**
+- **12:30-12:45 - Day 1 recap & questions**
+- **12:45-1:45 - Exploratory data analysis**
+- **2:00-3:00 - Basic statistical inference** 
+- **3:30-4:45 - Linear models**
 
 ---
 
 # Day 3
 
 - **12:00-12:30 - Help session**
-- **12:30-12:40 - Day 2 recap & questions**
-- **12:40-2:00 - Differential expression analysis with DESeq2**
-- **2:10-3:10 - Results annotation & visualization**
-- **3:15-3:40 - Putting it all together**
-- **3:40-4:00 - Wrap-up & closing remarks**
+- **12:30-12:45 - Day 2 recap & questions**
+- **12:45-1:45 - Differential expression analysis with DESeq2**
+- **2:00-3:15 - Results annotation & visualization**
+- **3:30-3:45 - Putting it all together**
+- **3:45-4:15 - Wrap-up & closing remarks**
 ---
