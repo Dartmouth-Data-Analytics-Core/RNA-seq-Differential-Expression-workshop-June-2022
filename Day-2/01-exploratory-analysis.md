@@ -404,7 +404,10 @@ draw(ht1, row_title = "Genes", column_title = "Top 500 most variable genes")
 There does appear to be reasonable clustering between untreated and Dex samples, suggesting there are unique gene expression programs defining the Dex samples from the untreated. However, one of these samples in the Dex group seems to be clustered further away from the other Dex samples. This could be the Dex treated sample that clustered away from the other Dex treated samples on the PCA. We can add an annotation bar for the fake batch effect we created earlier to this plot to confirm this.
 
 ```r
-# set the batch variable for these samples as batch 2
+# Find the identity of the 'batch 2' samples for the untreated and Dex samples
+pca_df$sample_ids[pca_df$PC2 > 10 & pca_df$tx.group=="untreated"]
+pca_df$sample_ids[pca_df$PC2 > 10 & pca_df$tx.group=="Dex"]					 
+# set the batch variable for these samples as batch 2, and all others to batch 1
 colData_sub$batch <- "Batch 1"
 colData_sub$batch[colData_sub$SRR=="SRR1039516"] <- "Batch 2"
 colData_sub$batch[colData_sub$SRR=="SRR1039517"] <- "Batch 2"
