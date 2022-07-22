@@ -277,7 +277,7 @@ res <- results(dds,
   alpha = 0.05)
 
 # check dminesions on tables
-dim(head)
+dim(res)
 
 # print top of results table
 head(res)
