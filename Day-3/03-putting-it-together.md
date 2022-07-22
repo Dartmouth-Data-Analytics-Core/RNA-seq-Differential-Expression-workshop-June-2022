@@ -6,8 +6,30 @@
 
 ### A complete workflow
 
-The entire DESeq2 workflow essentially boils down to just a few functions run sequentially. In this lesson we will review them to consolidate our knowledge oh how to perform a complete DE analysis with DESeq2. 
+The entire DESeq2 workflow can be run using only few functions run sequentially. In this lesson we will review them to consolidate our knowledge of how to perform a complete DE analysis with DESeq2. We also give an example of a reusable R script that will generate basic exploratory analysis plots, run the DESeq2 functions, and save the results to a file.
 
+### The minimum functions needed to run DESeq2
+```r
+#A minimal example
+library(DESeq2)
+
+setwd("~/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
+
+cts <- as.matrix(read.table("all_counts.txt"), sep="\t", header = TRUE, row.names=1, stringsAsFactors = F)
+colData <- read.csv("sample_metadata.csv", row.names=1)
+colData$tx.group <- factor(colData$tx.group, levels=c("untreated", "Dex", "Alb", "Alb_Dex"))
+
+dds_matrix <- DESeqDataSetFromMatrix(countData = cts, colData = colData, design =  ~ tx.group)
+dds <- DESeq(dds_matrix)
+res <- results(dds, coef=2, alpha = 0.05, lfcThreshold = 0)
+res_shrink <- lfcShrink(dds,coef=2, type="apeglm")
+res_shrink_ord <- res_shrink[order(res_shrink$padj),]
+head(res_shrink_ord)
+```
+
+### A more fully-featured DESeq2 workflow
+
+Below is a starting point for a reusable pipeline with more features than the minimal example.  The input data, treatments, and contrasts are specified as variables at the top, and used throughout the plotting functions, differential expression functions, and file writing functions.
 ```r
 #Putting it all together
 
@@ -153,7 +175,7 @@ plotMA(res_shrink, ylim=c(-4,4))
 dev.off()
 
 #Order results
-res_shrink_ord <- res_shrink[order(res$padj),]
+res_shrink_ord <- res_shrink[order(res_shrink$padj),]
 
 #Annotate results with gene name
 annotation_table <- read.delim("GRCh38.p12_ensembl-97.txt", stringsAsFactors = T, header = T)
