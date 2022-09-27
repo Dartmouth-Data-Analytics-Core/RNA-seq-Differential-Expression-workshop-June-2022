@@ -342,105 +342,134 @@ x <- list(c(1.63, 2.25, 3.83, 4.99),
 str(x)
 ```
 
-### Matrices
+### Creating a Count Matrix
 
-By extending the attributes of a vector to give them *dimensions*, i.e. the number of rows and columns we want the vector to be organized into, we can create *matrices*, a data structure that efficiently stores tabular data of a specific, single object class.
+Once sequencing is completed on your experiment you will be provided a count matrix with samples names across the top of your txt file and gene names down the left hand side. This file is used for downstream processing. Today, we will be creating a count matrix of our own to familiarize ourselves with vectors and dataframes. We will begin by generating a matrix with 10 columns and 10 rows of random numbers between 0 and 10.
+
+First we create a vector of numbers from 0 to 10
 
 ```r
-mat <- matrix(c(1.63, 2.25, 3.83, 4.99,
-                2.43, 8.31, 3.12, 7.25,
-                1.29, 3.23, 3.48, 0.23),
-                nrow=3, ncol=4)
+num.vector <- c(0:10)
+```
+
+We have our computer randomly select 100 numbers from our num.vector and put it in a vector of size 100. You might notice the argument replace=TRUE. This tell the computer to sample from our num.vector with replacement, meaning each number can be chosen to be put in the count.vector more than once.
+
+```r
+count.vector <- sample(num.vector, size = 100, replace = TRUE)
+count.vector
+```
+
+We now create a matrix using our count.vector. We tell R that we want a matrix with 10 rows and 10 columns with the data in count.vector. byrow means that we are arranging the data rowwise instead of columnwise, which is the default in R.
+
+```r
+count.matrix <- matrix(count.vector, ncol=10, nrow=10, byrow = TRUE)
+count.matrix
+```
+Now that we have created a matrix of random whole numbers for our count matrix, we need to add sample names and genes. I mentioned previously that our sample names will be the column headers and the row names will be the gene names. Hence, we will be needing 10 sample names and 10 gene names for our dataset.
+
+```r
+rownames(count.matrix) <- c("gene_1", "gene_2", "gene_3","gene_4","gene_5","gene_6","gene_7","gene_8","gene_9","gene_10")
+colnames(count.matrix) <- c("subject_1", "subject_2", "subject_3", "subject_4","subject_5","subject_6","subject_7","subject_8","subject_9","subject_10")
+count.matrix
+```
+
+Challenge: We can use a coding shortcut here! It's easy to make typos while writing out all the gene and sample names. Let's use the paste function to make things easier for us. Here we are telling R to make the first part of our name gene and sample respectively. Then, we are telling R to add the numbers 1 through 10 to the end of each sample or gene name.
+
+```r
+rownames(count.matrix) <- paste('gene',1:10,sep='_')
+colnames(count.matrix) <- paste('subject',1:10,sep='_')
+count.matrix
+```
+
+You can access data in the matrix using the commands below.
+
+```{r}
 # check the structure and dimensions with dim()
-str(mat)
-dim(mat)
+str(count.matrix)
+dim(count.matrix)
 
 # specific elements can be obtained through subsetting
 ### row 1
-mat[1,]
+count.matrix[1,]
 ### column 2
-mat[,2]
+count.matrix[,2]
 ### element 2 of row 3
-mat[3,2]
+count.matrix[3,2]
 
 # check class of the object and one row
-class(mat)
-class(mat[1,])
+class(count.matrix)
+class(count.matrix[1,])
 ```
-
-Since matrices have dimensions, `names()` cannot be used as we did for vectors. Instead, `names()` is generalized into `rownames()` and `colnames()`.
-
-```r
-rownames(mat) <- c("gene_1", "gene_2", "gene_3")
-colnames(mat) <- c("subject_1", "subject_2", "subject_3", "subject_4")
-```
-
 Matrices are a very important object class for mathematical and statistical applications in R, so it is certainly worth exploring more complex matrix operations if you will be doing any more complex statistical analysis in R.
 
 ### Data frames
 
-Data frames are very efficient ways of storing tabular data in R. Like matrices, data frames have dimensionality and are organized into rows and columns, however data frames can store vectors of different object classes.
-
-Often you will construct a data frame by reading in a dataset from a file. While we will cover reading data into R below, we will construct a data frame using the `data.frame()` constructor function in R for this example.
+Data frames are very efficient ways of storing tabular data in R. Like matrices, data frames have dimensionality and are organized into rows and columns, however data frames can store vectors of different object classes. Let's convert our matrix to a dataframe in R.
 
 ```r
-df <- data.frame(subject_id = c("s1", "s2", "s3", "s4"),
-                 age = c(45, 83, 38, 23),
-                 sex = c("female", "female", "male", "female"),
-                 status = c("case", "case", "control", "control"))
+count.df <- as.data.frame(count.matrix)
+count.df
+```
+We can also directly create data frames in R. This is useful if we need to add information about our subjects like sex, race, age range, smoking status, etc. Let's create one of these data frames for our subjects here.
+
+```r
+df <- data.frame(subject_id = c("subject_1", "subject_2", "subject_3", "subject_4","subject_5","subject_6","subject_7","subject_8","subject_9","subject_10"),
+                 age = c(45, 83, 38, 23, 65, 40, 32, 89, 77, 53),
+                 gender = c("female", "female", "male", "female", "female", "male", "female","male","male","male"),
+                 status = c("case", "case", "control", "control","case","case","case","control","control","case"))
 
 str(df)
 ```
+Note that the default behavior of data.frame() in R version < 4.0 is to convert character strings to factors. If you want to prevent this behavior, you can set the StringsAsFactors argument as FALSE. In R versions > 4.0, the default behaviour is StringsAsFactors==TRUE.
 
-Note that the default behavior of `data.frame()` in R version < 4.0 is to convert character strings to factors. If you want to prevent this behavior, you can set the `StringsAsFactors` argument as `FALSE`. In R versions > 4.0, the default behavior is `StringsAsFactors==TRUE`.
-
-```r
-df <- data.frame(subject_id = c("s1", "s2", "s3", "s4"),
-                 age = c(45, 83, 38, 23),
-                 sex = c("female", "female", "male", "female"),
-                 status = c("case", "case", "control", "control"),
+```{r}
+df <- data.frame(subject_id = c("subject_1", "subject_2", "subject_3", "subject_4","subject_5","subject_6","subject_7","subject_8","subject_9","subject_10"),
+                 age = c(45, 83, 38, 23, 65, 40, 32, 89, 77, 53),
+                 gender = c("female", "female", "male", "female", "female", "male", "female","male","male","male"),
+                 status = c("case", "case", "control", "control","case","case","case","control","control","case"),
                  stringsAsFactors=FALSE)
 
 str(df)
 ```
+Data frames can be subset in similar ways to matrices using brackets or the $ subsetting operator. Columns/variables can also be added using the $ operator.
 
-Data frames can be subset in similar ways to matrices using brackets or the `$` subsetting operator. Columns/variables can also be added using the `$` operator.
- ```r
+```r
 # get first row
 df[1,]
 
 # get first column
 df[,1]
 
-# get sex variable/column
-df[, c("sex")]
+# get gender variable/column
+df[, c("gender")]
 
-# # get sex and status
-df[, c("sex", "status")]
+# # get gender and status
+df[, c("gender", "status")]
 
-# get the sex variable with $
-df$sex
+# get the gender variable with $
+df$gender
 
 # add a column for smoking status
-df$smoking_status <- c("former", "none", "heavy", "none")
+df$smoking_status <- c("former", "none", "heavy", "none","none","heavy","heavy","heavy","former","former")
 ```
 
-Relational (e.g. `==`) and logical operators (e.g. `!`) can be used to interrogate specific variables in a dataframe. The resulting logical can also be used to subset the data frame.
+Relational (e.g. ==) and logical operators (e.g. !) can be used to interrogate specific variables in a dataframe. The resulting logical can also be used to subset the data frame.
+
 ```r
 # obtain a logical indicating which subjects are female
-df$sex == "female"
+df$gender == "female"
 
 # use logical to subset the data frame for only female subjects (rows)
-df2 <- df[df$sex == "female", ]
+df2 <- df[df$gender == "female", ]
 
 # check dimensions of the new data frame
 dim(df2)
 
 # use the LOGICAL NOT operator ! to obtain only male subjects  
-df[!df$sex == "female", ]
+df[!df$gender == "female", ]
 
 # this could obviously also be achieved with..
-df[df$sex == "male", ]
+df[df$gender == "male", ]
 ```
 
 ### Beyond the basic object classes
@@ -608,22 +637,76 @@ class(counts); dim(counts); str(counts)
 
 When datasets get very large, these base R functions can be quite slow. Although we do not have time to cover them here, the [*readr*](https://readr.tidyverse.org/) and [*data.table*](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html) packages contain functions that introduce extremely fast ways of reading data into an R environment.
 
-### Exporting tabular data
+### Exporting Tabular Data
 
-The major functions in base R that exist for writing tabular data to file are `write.table()` and `write.csv()`. Similarly to the read functions, `write.table()` provides a more generalized solution to writing data that requires you to specify the separator value.
+We may want to save our count matrix and metadata to files we can later read back into R.
 
-In both functions, the first argument specifies the object in your global environment that you wish to write to file. The second argument defines the absolute or relative path to the location you wish to save this file.
+The major functions in base R that exist for writing tabular data to file are write.table() and write.csv(). Similarly to the read functions, write.table() provides a more generalized solution to writing data that requires you to specify the separator value.
+
+In both functions, the first argyument specifies the object in your global environment that you wish to write to file. The second argument defines the absolute or relative path to the location you wish to save this file.
+
 ```r
-# subset counts for first 5 columns and first 2000 genes
-counts_sub <- counts[1:2000, 1:5]
-
+setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
 # write to tab delimited file using write.table
-write.table(counts_sub, file = "all_counts_sub.txt", sep = "\t")
+write.table(count.df, file = "count_df.txt", sep = "\t")
 ```
 
-In contrast, `write.csv()` does not require you to set the delimiter value, and by default writes data to comma separated value files (.csv).
+In contrast, read.csv() does not require you to set the delimitor value, and by default writes data to comma separated value files (.csv).
+
+```{r}
+setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+write.csv(df, file = "metadata_df.csv")
+```
+
+###Importing Tabular Data
+
+Tabular data are often stored as text files where the individual fields containing data points are separated by punctuation points. Three functions exist in base R to facilitate reading in tabular data stored as text files.
+
+read.table() - general function for reading in tabular data with various delimiters
+read.csv() - used to read in comma separated values files, where commas are the delimiter
+read.delim() - used to read in files in which the delimiters are tabs
+Use read.table() to read in the all_counts.txt that we used on day 1. Since read.table() is a general function for loading in tabular data, we need to specify the correct separator/delimiter value using the sep argument. Tab delimited data is specified using \t in the sep argument.
+
 ```r
-write.csv(counts_sub, file = "all_counts_sub.csv")
+setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+# check where we are
+getwd()
+
+# using read.table
+count.df <- read.table(file = "count_df.txt",
+                     sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+### Note 1: header accepts logical value indicating if the first row are column names (default FALSE)
+### Note 2: we use stringsAsFactors
+
+# check class, dimensions and structure
+class(count.df); dim(count.df); str(count.df)
+```
+Now use read.delim(). An important difference between read.delim() and read.table() are the default setting for the sep and header arguments. By default in read.delim(), sep is set to \t and the header argument is set to TRUE, so we do not need to explicitly call those arguments.
+
+```r
+setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+# using read.delim
+count.df <- read.delim(file = "count_df.txt", stringsAsFactors=FALSE)
+
+# check class, dimensions and structure
+class(count.df); dim(count.df); str(count.df)
+
+```
+read.csv() is used in exactly the same way read.delim(), however the file specified must contain data separated by commas and have the extension .csv.
+```r
+setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+meta_data <- read.csv(file = "metadata_df.csv",row.names=1)
+meta_data
+```
+When datasets get very large, these base R functions can be quite slow. Although we do not have time to cover them here, the readr and data.table packages contain functions that introduce extremely fast ways of reading data into an R environment.
+
+Let's read in some publicly available data from a real RNA-seq run. The paper and access to the data can be found at this link: https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE198520. This data was generated from synovial fluid collected from inflamed joints of patients with rheumatoid arthritis before and after treatment with a TNF-a blocker, a common treatment for this disease.
+
+```r
+setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+example.df <- read.table(file = "GSE198520_Raw_gene_count_matrix.txt",
+                     sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+head(example.df)
 ```
 
 ## Save R objects to file
