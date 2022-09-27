@@ -346,7 +346,7 @@ str(x)
 
 Once sequencing is completed on your experiment you will be provided a count matrix with samples names across the top of your txt file and gene names down the left hand side. This file is used for downstream processing. Today, we will be creating a count matrix of our own to familiarize ourselves with vectors and dataframes. We will begin by generating a matrix with 10 columns and 10 rows of random numbers between 0 and 10.
 
-First we create a vector of numbers from 0 to 10
+First we create a vector of numbers from 0 to 10:
 
 ```r
 num.vector <- c(0:10)
@@ -383,7 +383,7 @@ count.matrix
 
 You can access data in the matrix using the commands below.
 
-```{r}
+```r
 # check the structure and dimensions with dim()
 str(count.matrix)
 dim(count.matrix)
@@ -422,7 +422,7 @@ str(df)
 ```
 Note that the default behavior of data.frame() in R version < 4.0 is to convert character strings to factors. If you want to prevent this behavior, you can set the StringsAsFactors argument as FALSE. In R versions > 4.0, the default behaviour is StringsAsFactors==TRUE.
 
-```{r}
+```r
 df <- data.frame(subject_id = c("subject_1", "subject_2", "subject_3", "subject_4","subject_5","subject_6","subject_7","subject_8","subject_9","subject_10"),
                  age = c(45, 83, 38, 23, 65, 40, 32, 89, 77, 53),
                  gender = c("female", "female", "male", "female", "female", "male", "female","male","male","male"),
@@ -601,41 +601,6 @@ There are a large number of packages designed for specifically for visualization
 
 Importantly, visualization implemented in these packages form the basis for some bioinformatics specific data visualization packages that we will explore later in the workshop.
 
-## Import and export tabular data
-
-Tabular data are often stored as text files where the individual fields containing data points are separated by punctuation points. Three functions exist in base R to facilitate reading in tabular data stored as text files.
-
-- `read.table()` - general function for reading in tabular data with various delimiters
-- `read.csv()` - used to read in comma separated values files, where commas are the delimiter
-- `read.delim()` - used to read in files in which the delimiters are tabs
-
-Use `read.table()` to read in the *all_counts.txt*  that we used on day 1. Since `read.table()` is a general function for loading in tabular data, we need to specify the correct separator/delimiter value using the `sep` argument. Tab delimited data is specified using `\t` in the `sep` argument.
-```r
-# check where we are
-getwd()
-
-# using read.table
-counts <- read.table(file = "all_counts.txt",
-                     sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-### Note 1: header accepts logical value indicating if the first row are column names (default FALSE)
-### Note 2: we use stringsAsFactors
-
-# check class, dimensions and structure
-class(counts); dim(counts); str(counts)
-```
-
-Now use `read.delim()`. An important difference between `read.delim()` and `read.table()` are the default setting for the *sep* and *header* arguments. By default in `read.delim()`, *sep* is set to `\t` and the header argument is set to `TRUE`, so we do not need to explicitly call those arguments.
-```r
-# using read.delim
-counts <- read.delim(file = "all_counts.txt", stringsAsFactors=FALSE)
-
-# check class, dimensions and structure
-class(counts); dim(counts); str(counts)
-```
-
-`read.csv()` is used in exactly the same way `read.delim()`, however the `file` specified must contain data separated by commas and have the extension `.csv`.
-
-When datasets get very large, these base R functions can be quite slow. Although we do not have time to cover them here, the [*readr*](https://readr.tidyverse.org/) and [*data.table*](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html) packages contain functions that introduce extremely fast ways of reading data into an R environment.
 
 ### Exporting Tabular Data
 
@@ -665,7 +630,8 @@ Tabular data are often stored as text files where the individual fields containi
 read.table() - general function for reading in tabular data with various delimiters
 read.csv() - used to read in comma separated values files, where commas are the delimiter
 read.delim() - used to read in files in which the delimiters are tabs
-Use read.table() to read in the all_counts.txt that we used on day 1. Since read.table() is a general function for loading in tabular data, we need to specify the correct separator/delimiter value using the sep argument. Tab delimited data is specified using \t in the sep argument.
+
+Use read.table() to read in the count_df.txt. Since read.table() is a general function for loading in tabular data, we need to specify the correct separator/delimiter value using the sep argument. Tab delimited data is specified using \t in the sep argument.
 
 ```r
 setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
@@ -675,6 +641,7 @@ getwd()
 # using read.table
 count.df <- read.table(file = "count_df.txt",
                      sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+
 ### Note 1: header accepts logical value indicating if the first row are column names (default FALSE)
 ### Note 2: we use stringsAsFactors
 
@@ -698,8 +665,6 @@ setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
 meta_data <- read.csv(file = "metadata_df.csv",row.names=1)
 meta_data
 ```
-When datasets get very large, these base R functions can be quite slow. Although we do not have time to cover them here, the readr and data.table packages contain functions that introduce extremely fast ways of reading data into an R environment.
-
 Let's read in some publicly available data from a real RNA-seq run. The paper and access to the data can be found at this link: https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE198520. This data was generated from synovial fluid collected from inflamed joints of patients with rheumatoid arthritis before and after treatment with a TNF-a blocker, a common treatment for this disease.
 
 ```r
@@ -708,6 +673,10 @@ example.df <- read.table(file = "GSE198520_Raw_gene_count_matrix.txt",
                      sep = "\t", header = TRUE, stringsAsFactors = FALSE)
 head(example.df)
 ```
+
+When datasets get very large, these base R functions can be quite slow. Although we do not have time to cover them here, the readr and data.table packages contain functions that introduce extremely fast ways of reading data into an R environment.
+
+
 
 ## Save R objects to file
 
