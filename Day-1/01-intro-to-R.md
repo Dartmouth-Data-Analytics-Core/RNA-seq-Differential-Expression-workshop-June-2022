@@ -611,7 +611,7 @@ The major functions in base R that exist for writing tabular data to file are wr
 In both functions, the first argyument specifies the object in your global environment that you wish to write to file. The second argument defines the absolute or relative path to the location you wish to save this file.
 
 ```r
-setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
 # write to tab delimited file using write.table
 write.table(count.df, file = "count_df.txt", sep = "\t")
 ```
@@ -619,11 +619,11 @@ write.table(count.df, file = "count_df.txt", sep = "\t")
 In contrast, read.csv() does not require you to set the delimitor value, and by default writes data to comma separated value files (.csv).
 
 ```{r}
-setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
 write.csv(df, file = "metadata_df.csv")
 ```
 
-###Importing Tabular Data
+### Importing Tabular Data
 
 Tabular data are often stored as text files where the individual fields containing data points are separated by punctuation points. Three functions exist in base R to facilitate reading in tabular data stored as text files.
 
@@ -634,7 +634,7 @@ read.delim() - used to read in files in which the delimiters are tabs
 Use read.table() to read in the count_df.txt. Since read.table() is a general function for loading in tabular data, we need to specify the correct separator/delimiter value using the sep argument. Tab delimited data is specified using \t in the sep argument.
 
 ```r
-setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
 # check where we are
 getwd()
 
@@ -651,7 +651,7 @@ class(count.df); dim(count.df); str(count.df)
 Now use read.delim(). An important difference between read.delim() and read.table() are the default setting for the sep and header arguments. By default in read.delim(), sep is set to \t and the header argument is set to TRUE, so we do not need to explicitly call those arguments.
 
 ```r
-setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
 # using read.delim
 count.df <- read.delim(file = "count_df.txt", stringsAsFactors=FALSE)
 
@@ -661,14 +661,14 @@ class(count.df); dim(count.df); str(count.df)
 ```
 read.csv() is used in exactly the same way read.delim(), however the file specified must contain data separated by commas and have the extension .csv.
 ```r
-setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
 meta_data <- read.csv(file = "metadata_df.csv",row.names=1)
 meta_data
 ```
 Let's read in some publicly available data from a real RNA-seq run. The paper and access to the data can be found at this link: https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE198520. This data was generated from synovial fluid collected from inflamed joints of patients with rheumatoid arthritis before and after treatment with a TNF-a blocker, a common treatment for this disease.
 
 ```r
-setwd("/Users/noellekosarek/Desktop/Bioinformatics_Workshop/")
+setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
 example.df <- read.table(file = "GSE198520_Raw_gene_count_matrix.txt",
                      sep = "\t", header = TRUE, stringsAsFactors = FALSE)
 head(example.df)
