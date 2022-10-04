@@ -28,7 +28,7 @@ library(circlize)
 
 ### Introduction
 
-Before running a differential expression analysis, it is good practice to explore the relationships between samples based on their gene global gene expression profiles. This analysis allows perform several quality control checks such as confirming that replicates cluster together, or the dataset is free from batch effects. Furthermore, these analyses allow us to build expectations for our DE analysis.
+Before running a differential expression analysis, it is good practice to explore the relationships between samples based on their gene global gene expression profiles. This analysis allows us to perform several quality control checks such as confirming that replicates cluster together, or the dataset is free from batch effects. Furthermore, these analyses allow us to build expectations for our DE analysis.
 
 
 
@@ -55,7 +55,7 @@ By using the projection values of each sample along the PCs, we can visualize th
 	title="" width="90%" height="90%" />
 </p>
 
-StatQuest has an excellent [video](https://www.youtube.com/watch?v=_UVHneBUBW0) that explains the fundamental concepts of PCA, and provides more details how to the PCs themselves are calculated.
+StatQuest has an excellent [video](https://www.youtube.com/watch?v=_UVHneBUBW0) that explains the fundamental concepts of PCA, and provides more details how on the PCs themselves are calculated.
 
 #### Performing PCA on RNA-seq data
 
@@ -210,7 +210,7 @@ text((pca_df[, 2])~(pca_df[, 1]), labels = pca_df$tx.group, cex=0.6, font=2, pos
 
 - Most of the samples appear to cluster by treatment group. For example, untreated samples generally have much lower PC1 values than all the Dex samples, suggesting that some of the largest variability in gene expression differences between samples in this dataset explains differences between untreated and Dex treated samples. Therefore we expect the most substantial differential expression to be found for the untreated vs Dex analysis.
 
-- The Alb treated samples, and the co-treated samples (Alb\Dex) do not seem to consistently cluster along PC1 and PC2. One explanation for this could be that treatment with Alb or co-treatment with Alb & Dex have inconsistent effects on gene expression. This is often the case with *in vivo* model systems, which often demonstrate more inherent variability, and may require more replicates to confidently determine if a trend exists of not.
+- The Alb treated samples, and the co-treated samples (Alb\Dex) do not seem to consistently cluster along PC1 and PC2. One explanation for this could be that treatment with Alb or co-treatment with Alb & Dex have inconsistent effects on gene expression. This is often the case with *in vivo* model systems, which often demonstrate more inherent variability, and may require more replicates to confidently determine if a trend exists or not.
 
 #### Batch effect detection with PCA
 
@@ -274,7 +274,7 @@ A comprehensive introduction of how to correct for a batch effect is beyond the 
 
 Deciding on which approach to take is a complicated issue, and is largely dependent on the extent of the batch effect. If the batch effect is very large, it may be too difficult to effectively remove it statistically, or regress out variation attributable to it in the DE analysis.
 
-Ultimately, the easiest way to handle a batch effect if to prevent it from ever occurring. Where possible, practice your protocol and confirm you can get consistent replicates before committing to the full experiment.
+Ultimately, the easiest way to handle a batch effect is to prevent it from ever occurring. Where possible, practice your protocol and confirm you can get consistent replicates before committing to the full experiment.
 
 **Take home message on batch effects:** If your experiment includes multiple batches, check them in your unsupervised analyses to check for a batch effect.
 
@@ -303,7 +303,7 @@ Both supervised and unsupervised clustering methods exist, however unsupervised 
 	title="" width="90%" height="90%" />
 </p>
 
-Expression levels of each gene determine the colors shown in each cell of the heatmap, and allow us to identify genes expressed at different levels across samples. If both columns and rows are clustered, samples which share similar expression profiles will be placed closer to each other on the dendrogram, while genes that demonstrate similar patterns of variation across sample will be placed closer together, allowing us to identify **modules** of co-varying genes.
+Expression levels of each gene determine the colors shown in each cell of the heatmaps, and allow us to identify genes expressed at different levels across samples. If both columns and rows are clustered, samples which share similar expression profiles will be placed closer to each other on the dendrogram, while genes that demonstrate similar patterns of variation across sample will be placed closer together, allowing us to identify **modules** of co-varying genes.
 
 Although we will not go into detail on how the clustering algorithm works, **StatQuest** has an [excellent video](https://www.youtube.com/watch?v=7xHsRkOdVwo&ab_channel=StatQuestwithJoshStarmer) that explains the process in more detail, as well as [another video](https://www.youtube.com/watch?v=oMtDyOn2TCc&ab_channel=StatQuestwithJoshStarmer) that summarizes the process of drawing and interpreting heatmaps.
 

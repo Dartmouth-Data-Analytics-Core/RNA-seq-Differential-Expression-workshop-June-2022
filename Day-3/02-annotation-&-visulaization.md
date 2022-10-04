@@ -313,7 +313,7 @@ plotMA(res_shrink, ylim=c(-6,6), main = "Shrunken Log2 Fold change")
   <img src="../figures/MAplots.1.png" height=50% width=50% />
 </p>
 
-Comparing to the raw LFCs, **majority of genes with lower expression values have had their LFCs shrunk toward zero**. Conceptually, genes with low counts can easily generate a large LFC since only a few extra counts represent a substantial proportional difference between two small numbers. Consequently, these fold-changes are unlikely to be accurate as they are based of few reads, so we don’t want to prioritize their importance by giving them a large LFC, and instead shrink them toward 0.
+Comparing to the raw LFCs, **majority of genes with lower expression values have had their LFCs shrunk toward zero**. Conceptually, genes with low counts can easily generate a large LFC since only a few extra counts represent a substantial proportional difference between two small numbers. Consequently, these fold-changes are unlikely to be accurate as they are based off few reads, so we don’t want to prioritize their importance by giving them a large LFC, and instead shrink them toward 0.
 
 It’s always good to review the shrunken estimates, to confirm that you don’t have many DEGs with very small count values. If you do, you may want to look at the expression levels for those genes to investigate these findings in more detail.
 

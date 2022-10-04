@@ -2,7 +2,7 @@
 
 ### Learning objectives:
 - Learn the principles behind the major normalization strategies in RNA-seq
-- Implement these normalization stratagies using custom R code
+- Implement these normalization strategies using custom R code
 
 ### Set-up
 
