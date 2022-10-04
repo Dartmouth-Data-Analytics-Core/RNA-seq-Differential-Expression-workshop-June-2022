@@ -3,13 +3,13 @@
 ------------------------------
 
 ### Learning objectives:
-- Learn the basic syntax and data types availabe in R.
+- Learn the basic syntax and data types available in R.
 - Learn about the RStudio environment.
 - Learn to read and write files within R.
 
 ------------------------------
 
-R is a free, open source programming language and statistical software environment, first released in 1993, that is used extensively in bioinformatics. Beyond the basic functionality included in R's standard distribution, an enormous number of packages designed to extend R's functionality for specific applications an exist, representing one of R's core strengths.
+R is a free, open source programming language and statistical software environment, first released in 1993, that is used extensively in bioinformatics. Beyond the basic functionality included in R's standard distribution, an enormous number of packages designed to extend R's functionality for specific applications exist, representing one of R's core strengths.
 
 R is also a very powerful way to create high quality graphics, using both functionality in base R as well as graphics specific packages, such as [ggplot2](https://ggplot2.tidyverse.org/). These packages provide a high level of user control, meaning almost all plotting features can be controlled. Importantly, numerous R packages provide functionality for generating bioinformatics specific visualizations.
 
@@ -45,7 +45,7 @@ There are several ways we can interface with R, including:
 - running directly from a terminal-type application
 - using a graphical user interface (GUI) or Integrated Development Environment (IDE)
 
-While there are times when it is preferable to run R in one way over another, using a GUI or IDE is perhaps the most popular what to interface with R, with the most popular IDE being *RStudio*.
+While there are times when it is preferable to run R in one way over another, using a GUI or IDE is perhaps the most popular way to interface with R, with the most popular IDE being *RStudio*.
 
 ### RStudio
 
@@ -69,7 +69,7 @@ We will be using RStudio throughout the workshop, although will point out how an
 ---
 ## Orienting yourself
 
-As with working on the terminal a good first step is to orient yourself, let's see where you are on your local computer and reset this location to where you want to be with the `getwd()` and `setwd()` functions.
+As with working on the terminal, a good first step is to orient yourself. Let's see where you are on your local computer and reset this location to where you want to be with the `getwd()` and `setwd()` functions.
 
 ```r
 # Where are you on your local machine
@@ -178,7 +178,7 @@ class(x.na)
 
 ### Operators
 
-We introduced two *operators* in the examples above, the assignment operator `<-` and the sequence operator `:`. Operators are essentially symbols that tell R how you would like to relate the *operands* on either side of the symbol. in R, operators can be broadly categorized into *assignment*, *arithmetic*, *relational*, and *logical*.
+We introduced two *operators* in the examples above, the assignment operator `<-` and the sequence operator `:`. Operators are essentially symbols that tell R how you would like to relate the *operands* on either side of the symbol. In R, operators can be broadly categorized into *assignment*, *arithmetic*, *relational*, and *logical*.
 
 The assignment operators are `<-` and `=` which both tell R to assign a vector to a some value. It is best to stick to one within a single project.
 
@@ -344,7 +344,7 @@ str(x)
 
 ### Creating a Count Matrix
 
-Once sequencing is completed on your experiment you will be provided a count matrix with samples names across the top of your txt file and gene names down the left hand side. This file is used for downstream processing. Today, we will be creating a count matrix of our own to familiarize ourselves with vectors and dataframes. We will begin by generating a matrix with 10 columns and 10 rows of random numbers between 0 and 10.
+Once sequencing is completed on your experiment you will be provided a count matrix with sample names across the top of your text file and gene names down the left hand side. This file is used for downstream processing. Today, we will be creating a count matrix of our own to familiarize ourselves with vectors and data frames. We will begin by generating a matrix with 10 columns and 10 rows of random numbers between 0 and 10.
 
 First we create a vector of numbers from 0 to 10:
 
@@ -359,7 +359,7 @@ count.vector <- sample(num.vector, size = 100, replace = TRUE)
 count.vector
 ```
 
-We now create a matrix using our count.vector. We tell R that we want a matrix with 10 rows and 10 columns with the data in count.vector. byrow means that we are arranging the data rowwise instead of columnwise, which is the default in R.
+We now create a matrix using our count.vector. We tell R that we want a matrix with 10 rows and 10 columns with the data in count.vector. byrow means that we are arranging the data row-wise instead of column-wise, which is the default in R.
 
 ```r
 count.matrix <- matrix(count.vector, ncol=10, nrow=10, byrow = TRUE)
@@ -373,7 +373,7 @@ colnames(count.matrix) <- c("subject_1", "subject_2", "subject_3", "subject_4","
 count.matrix
 ```
 
-Challenge: We can use a coding shortcut here! It's easy to make typos while writing out all the gene and sample names. Let's use the paste function to make things easier for us. Here we are telling R to make the first part of our name gene and sample respectively. Then, we are telling R to add the numbers 1 through 10 to the end of each sample or gene name.
+Challenge: We can use a coding shortcut here! It's easy to make typos while writing out all the gene and sample names. Let's use the paste function to make things easier for us. Here we are telling R to make the first part of our name 'gene' and 'sample' respectively. Then, we are telling R to add the numbers 1 through 10 to the end of each sample or gene name.
 
 ```r
 rownames(count.matrix) <- paste('gene',1:10,sep='_')
@@ -404,7 +404,7 @@ Matrices are a very important object class for mathematical and statistical appl
 
 ### Data frames
 
-Data frames are very efficient ways of storing tabular data in R. Like matrices, data frames have dimensionality and are organized into rows and columns, however data frames can store vectors of different object classes. Let's convert our matrix to a dataframe in R.
+Data frames are very efficient ways of storing tabular data in R. Like matrices, data frames have dimensionality and are organized into rows and columns, however data frames can store vectors of different object classes. Let's convert our matrix to a data frame in R.
 
 ```r
 count.df <- as.data.frame(count.matrix)
@@ -420,7 +420,7 @@ df <- data.frame(subject_id = c("subject_1", "subject_2", "subject_3", "subject_
 
 str(df)
 ```
-Note that the default behavior of data.frame() in R version < 4.0 is to convert character strings to factors. If you want to prevent this behavior, you can set the StringsAsFactors argument as FALSE. In R versions > 4.0, the default behaviour is StringsAsFactors==TRUE.
+Note that the default behavior of data.frame() in R version < 4.0 is to convert character strings to factors. If you want to prevent this behavior, you can set the StringsAsFactors argument as FALSE. In R versions > 4.0, the default behavior is StringsAsFactors==TRUE.
 
 ```r
 df <- data.frame(subject_id = c("subject_1", "subject_2", "subject_3", "subject_4","subject_5","subject_6","subject_7","subject_8","subject_9","subject_10"),
@@ -453,7 +453,7 @@ df$gender
 df$smoking_status <- c("former", "none", "heavy", "none","none","heavy","heavy","heavy","former","former")
 ```
 
-Relational (e.g. ==) and logical operators (e.g. !) can be used to interrogate specific variables in a dataframe. The resulting logical can also be used to subset the data frame.
+Relational (e.g. ==) and logical operators (e.g. !) can be used to interrogate specific variables in a data frame. The resulting logical can also be used to subset the data frame.
 
 ```r
 # obtain a logical indicating which subjects are female
@@ -594,7 +594,7 @@ hist(x, col = "indianred", breaks=100)
 
 ### Visualization specific packages
 
-There are a large number of packages designed for specifically for visualization and are very useful in bioinformatic analyses. We won't cover these here since they are covered extensively elsewhere, but some useful visualization packages to be aware of include:
+There are a large number of packages designed specifically for visualization and are very useful in bioinformatic analyses. We won't cover these here since they are covered extensively elsewhere, but some useful visualization packages to be aware of include:
 - [ggplot2](https://ggplot2.tidyverse.org/reference/ggplot.html)
 - [ggpubr](http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/)
 - [ploty](https://plotly.com/python/)
@@ -604,11 +604,11 @@ Importantly, visualization implemented in these packages form the basis for some
 
 ### Exporting Tabular Data
 
-We may want to save our count matrix and metadata to files we can later read back into R.
+We may want to save our count matrix and metadata from the Matrices section to files we can later read back into R.
 
 The major functions in base R that exist for writing tabular data to file are write.table() and write.csv(). Similarly to the read functions, write.table() provides a more generalized solution to writing data that requires you to specify the separator value.
 
-In both functions, the first argyument specifies the object in your global environment that you wish to write to file. The second argument defines the absolute or relative path to the location you wish to save this file.
+In both functions, the first argument specifies the object in your global environment that you wish to write to file. The second argument defines the absolute or relative path to the location you wish to save this file.
 
 ```r
 setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")
@@ -665,7 +665,7 @@ setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data"
 meta_data <- read.csv(file = "metadata_df.csv",row.names=1)
 meta_data
 ```
-Let's read in some publicly available data from a real RNA-seq run. The paper and access to the data can be found at this link: https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE198520. This data was generated from synovial fluid collected from inflamed joints of patients with rheumatoid arthritis before and after treatment with a TNF-a blocker, a common treatment for this disease.
+Let's read in some publicly available data from a real RNA-seq run. The paper and access to the data can be found at this [link](https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE198520). This data was generated from synovial fluid collected from inflamed joints of patients with rheumatoid arthritis before and after treatment with a TNF-a blocker, a common treatment for this disease.
 
 ```r
 setwd("your_path/RNA-seq-Differential-Expression-workshop-June-2022-master/data")

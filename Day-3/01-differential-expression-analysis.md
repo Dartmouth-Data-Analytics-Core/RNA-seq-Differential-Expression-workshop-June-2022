@@ -58,7 +58,7 @@ Clearly, a lot is done for you by `DESeq()`. In order to understand what this fu
 
 ### Part 2: Characteristics of RNA-seq data
 
-Just like any other data type, its is important to understand the basic distribution before performing any analysis, so that we can select an appropriate statistical model for the data. DESeq2 fits models to the raw count data, therefore we should check the distribution of these counts.
+Just like any other data type, it is important to understand the basic distribution before performing any analysis, so that we can select an appropriate statistical model for the data. DESeq2 fits models to the raw count data, therefore we should check the distribution of these counts.
 
 Plot a histogram of raw counts:
 ```r
@@ -218,7 +218,7 @@ In a previous lesson, we introduced **generalized linear models (GLM)**, a famil
 - use of probability distributions other than the normal distribution
 - use of a *link-function* that connects the expression values in the linear model to the experimental groups
 
-Since we are are assuming our raw counts follow a negative-binomial (NB) distribution, the GLM we will fit is of the NB family of GLMs.
+Since we are assuming our raw counts follow a negative-binomial (NB) distribution, the GLM we will fit is of the NB family of GLMs.
 
 #### The DESeq2 model:
 
@@ -238,7 +238,7 @@ Briefly, the main features of this model:
 
 By fitting the model using the raw counts, dispersion estimates, and size factors for each gene, we obtain a set of **model coefficients** for each sample group, which can be interpreted as the **log2 fold-change** in expression for that gene between the baseline group and each comparison group.
 
-This coefficient, and the confidence associated with it (the standard error) can be used in **hypothesis testing** to calculate a **P-value**. DESeq2 uses the *Wald-test* to perform hypothesis testing, with the null hypothesis that *the log2 fold-change between experimental groups for an individual gene is not significantly different from 0* (no change in expression). This process is depcited in the figure below.
+This coefficient, and the confidence associated with it (the standard error) can be used in **hypothesis testing** to calculate a **P-value**. DESeq2 uses the *Wald-test* to perform hypothesis testing, with the null hypothesis that *the log2 fold-change between experimental groups for an individual gene is not significantly different from 0* (no change in expression). This process is depicted in the figure below.
 
 <p align="center">
 <img src="../figures/wald-test.png" alt="overview"
@@ -346,7 +346,7 @@ sum(res$padj < 0.05, na.rm=TRUE)
 
 As expected, the more conservative method leads to fewer statistically significant results at the same P-value threshold.
 
-> Remember, P-value thresholds do not need to be set at 5% for every experiment, you can be more or less conservative dependning on the nature of your experiment.
+> Remember, P-value thresholds do not need to be set at 5% for every experiment, you can be more or less conservative depending on the nature of your experiment.
 
 ---------
 

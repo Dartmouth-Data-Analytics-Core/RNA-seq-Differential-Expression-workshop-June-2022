@@ -32,7 +32,7 @@ In bioinformatic data analysis, we often conduct hypothesis testing to assess ho
 3. Use the test-statistic to calculate a P-value
 4. Reject the null hypothesis if P-value is below your *a priori* threshold
 
-To help understand this procedure for, some useful definitions:
+To help understand this procedure, here are some useful definitions:
 - **Null hypothesis (*H<sub>0*)** - the hypothesis that there is **no** meaningful difference* between our samples
 - **alternative hypothesis (*H<sub>A*)** there is a meaningful difference between our samples
 - **test-statistic** - quantity determined from your dataset comparing your results to those you would expect under the null hypothesis (that is, no true difference exists)
@@ -75,7 +75,7 @@ Placing our test-statistic on the t-distribution (red dotted line in figure belo
 
 To help us decide if the null hypothesis should be rejected or accepted based on this test-statistic, we must calculate a **P-value**, defined as *the probability of observing data equal to or more extreme than that observed due to chance*.
 
-It is sometimes helpful to consider P-values as a %, for example, if you if you have a *P*-value of **0.01**, there is a **1%** chance that your results occurred simply by chance (i.e. randomly). Alternatively, a *P*-value of **0.9** means there is a **90%** chance that this result would be observed by chance.
+It is sometimes helpful to consider P-values as a %, for example, if you have a *P*-value of **0.01**, there is a **1%** chance that your results occurred simply by chance (i.e. randomly). Alternatively, a *P*-value of **0.9** means there is a **90%** chance that this result would be observed by chance.
 
 Visually, the *P*-value is defined as the area under the curve to the right or left of the test-statistic (provided you run a two-tailed test).
 
