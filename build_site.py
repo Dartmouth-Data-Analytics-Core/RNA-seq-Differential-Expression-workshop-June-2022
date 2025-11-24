@@ -292,6 +292,16 @@ def markdown_to_html(md_content, base_path='.'):
     
     return html
 
+def normalize_anchor(filename):
+    """Normalize filename to create consistent anchor."""
+    anchor = filename.replace('/', '-').replace('.md', '').replace('&', '-').replace(' ', '-')
+    # Replace multiple dashes with single dash
+    while '--' in anchor:
+        anchor = anchor.replace('--', '-')
+    # Remove leading/trailing dashes
+    anchor = anchor.strip('-')
+    return anchor
+
 def build_navigation(structure):
     """Build navigation HTML from book structure."""
     nav_items = []
@@ -304,13 +314,13 @@ def build_navigation(structure):
                 nav_items.append(f'<div class="part-title">{part_title}</div>')
                 nav_items.append('<ul>')
                 for chapter_file, chapter_title in chapters:
-                    anchor = chapter_file.replace('/', '-').replace('.md', '').replace('&', '-').replace(' ', '-')
+                    anchor = normalize_anchor(chapter_file)
                     nav_items.append(f'<li><a href="#{anchor}">{chapter_title}</a></li>')
                 nav_items.append('</ul>')
             else:
                 # It's a single chapter
                 chapter_file, chapter_title = item
-                anchor = chapter_file.replace('/', '-').replace('.md', '').replace('&', '-').replace(' ', '-')
+                anchor = normalize_anchor(chapter_file)
                 nav_items.append(f'<li><a href="#{anchor}">{chapter_title}</a></li>')
     
     return '\n'.join(nav_items)
@@ -332,7 +342,7 @@ def build_content(structure, base_path='.'):
                             md_content = f.read()
                         
                         _, content = extract_frontmatter(md_content)
-                        anchor = chapter_file.replace('/', '-').replace('.md', '').replace('&', '-').replace(' ', '-')
+                        anchor = normalize_anchor(chapter_file)
                         html_content = markdown_to_html(content, base_path)
                         content_sections.append(f'<section id="{anchor}">')
                         content_sections.append(f'<h2>{chapter_title}</h2>')
@@ -347,7 +357,7 @@ def build_content(structure, base_path='.'):
                         md_content = f.read()
                     
                     _, content = extract_frontmatter(md_content)
-                    anchor = chapter_file.replace('/', '-').replace('.md', '').replace('&', '-').replace(' ', '-')
+                    anchor = normalize_anchor(chapter_file)
                     html_content = markdown_to_html(content, base_path)
                     content_sections.append(f'<section id="{anchor}">')
                     content_sections.append(f'<h1>{chapter_title}</h1>')
